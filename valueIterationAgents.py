@@ -1,4 +1,4 @@
-# valueIterationAgents.py
+﻿# valueIterationAgents.py
 # -----------------------
 # Licensing Information:  You are free to use or extend these projects for
 # educational purposes provided that (1) you do not distribute or publish
@@ -46,6 +46,35 @@ class ValueIterationAgent(ValueEstimationAgent):
         # Write value iteration code here
         "*** YOUR CODE HERE ***"
 
+        # fill every state with some action.
+        self.actions = dict()
+        for state in mdp.getStates():
+            stateActions = mdp.getPossibleActions(state)
+            if len(stateActions) > 0:
+                action = stateActions[0]
+                self.actions[state] = action
+
+        for i in xrange(iterations):
+            # make a copy of all the values.
+            # this copy will get modified in the for-loop,
+            # and at the end of the loop,
+            # the new values will become then real values.
+            nextValues = self.values.copy()
+
+            # for every state, and if it isn't a terminal state
+            # (you can't do any action on a terminal state):
+            for state in mdp.getStates():
+                if not mdp.isTerminal(state):
+                    # get the best action.
+                    action = self.computeActionFromValues(state)
+                    self.actions[state] = action
+                        
+                    # get the value for doing the currently stored action.
+                    nextValues[state] = self.computeQValueFromValues(state, action)
+
+            # copy the new values over the old values.
+            self.values.update(nextValues)
+            # end of for-loop.
 
     def getValue(self, state):
         """
@@ -60,7 +89,24 @@ class ValueIterationAgent(ValueEstimationAgent):
           value function stored in self.values.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # get the transition states with their probabilites.
+        transitionStatesAndProbs = self.mdp.getTransitionStatesAndProbs(state, action)
+        
+        # calculate the value of the current state
+        # by multiplying the reward of every possible transition state
+        # with the probability of going to that next state.
+        reward = 0
+        for (nextState, prob) in transitionStatesAndProbs:
+            nextStateReward = self.mdp.getReward(state, action, nextState) + self.values[nextState]
+            reward += prob * nextStateReward
+
+        # return the reward, and if there are more than one actions,
+        # multiply the reward with the discount.
+        # (only a state that goes to the terminal state has one action, namely 'exit')
+        if len(transitionStatesAndProbs) != 1:
+            return reward * self.discount
+        else:
+            return reward
 
     def computeActionFromValues(self, state):
         """
@@ -72,7 +118,22 @@ class ValueIterationAgent(ValueEstimationAgent):
           terminal state, you should return None.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # if this is a terminal state, return 'None'.
+        if self.mdp.isTerminal(state):
+            return 'None'
+
+        # get every action that can be done on this state.
+        possibleActions = self.mdp.getPossibleActions(state)
+
+        # for every action, check if the reward of doing that action
+        # is higher than the current best action.
+        # if so, then the new best action is the current action.
+        bestAction = 'None', -99999
+        for action in possibleActions:
+            actionReward = self.discount * self.computeQValueFromValues(state, action)
+            if actionReward > bestAction[1]:
+                bestAction = action, actionReward
+        return bestAction[0]
 
     def getPolicy(self, state):
         return self.computeActionFromValues(state)
