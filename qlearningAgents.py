@@ -41,9 +41,10 @@ class QLearningAgent(ReinforcementAgent):
     def __init__(self, **args):
         "You can initialize Q-values here..."
         ReinforcementAgent.__init__(self, **args)
-
+        
         "*** YOUR CODE HERE ***"
-
+        print 
+        
     def getQValue(self, state, action):
         """
           Returns Q(state,action)
@@ -86,10 +87,15 @@ class QLearningAgent(ReinforcementAgent):
         """
         # Pick Action
         legalActions = self.getLegalActions(state)
-        action = None
+        action = chooseAction()
+        
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
-
+        def chooseAction():
+            if(flipCoin(self.epsilon)):
+                random.choice(legalActions(state))
+            else:
+                computeActionFromQValues(state)
+                
         return action
 
     def update(self, state, action, nextState, reward):
