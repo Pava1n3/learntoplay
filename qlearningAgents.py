@@ -42,8 +42,9 @@ class QLearningAgent(ReinforcementAgent):
         "You can initialize Q-values here..."
         ReinforcementAgent.__init__(self, **args)
         
+        states = []
         "*** YOUR CODE HERE ***"
-        print 
+        
         
     def getQValue(self, state, action):
         """
@@ -52,6 +53,12 @@ class QLearningAgent(ReinforcementAgent):
           or the Q node value otherwise
         """
         "*** YOUR CODE HERE ***"
+        #Q(s,a) = livingReward + max [lijst rewards van de acties die in de nieuwe state gedaan kunnen worden]
+        
+        #this if returns true if states is empty
+        if not states:
+            return 0.0
+        
         util.raiseNotDefined()
 
 
@@ -63,6 +70,10 @@ class QLearningAgent(ReinforcementAgent):
           terminal state, you should return a value of 0.0.
         """
         "*** YOUR CODE HERE ***"
+        if(len(self.getLegalActions(state) == 0):
+            return 0.0
+        else:
+            util.raiseNotDefined()
         util.raiseNotDefined()
 
     def computeActionFromQValues(self, state):
@@ -72,6 +83,11 @@ class QLearningAgent(ReinforcementAgent):
           you should return None.
         """
         "*** YOUR CODE HERE ***"
+        if(len(self.getLegalActions(state) == 0):
+            return None
+        else:
+            util.raiseNotDefined()
+        
         util.raiseNotDefined()
 
     def getAction(self, state):
@@ -108,6 +124,8 @@ class QLearningAgent(ReinforcementAgent):
           it will be called on your behalf
         """
         "*** YOUR CODE HERE ***"
+        #after an action is made, should we recalculate the q-values of all states we know of?
+        
         util.raiseNotDefined()
 
     def getPolicy(self, state):
