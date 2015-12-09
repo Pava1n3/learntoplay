@@ -1,4 +1,4 @@
-# analysis.py
+﻿# analysis.py
 # -----------
 # Licensing Information:  You are free to use or extend these projects for
 # educational purposes provided that (1) you do not distribute or publish
@@ -63,6 +63,7 @@ def question3e():
 def question6():
     answerEpsilon = None
     answerLearningRate = None
+    return 'NOT POSSIBLE'
     return answerEpsilon, answerLearningRate
     # If not possible, return 'NOT POSSIBLE'
 
