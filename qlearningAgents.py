@@ -76,7 +76,7 @@ class QLearningAgent(ReinforcementAgent):
         else:
             max = -99999
             for action in legalActions:
-                qvalue = self.qvalues[(state, action)]
+                qvalue = self.getQValue(state, action)#self.qvalues[(state, action)]
                 if qvalue > max:
                     max = qvalue
             return max
@@ -94,7 +94,7 @@ class QLearningAgent(ReinforcementAgent):
         else:
             bestAction = 'none', -99999
             for action in legalActions:
-                qvalue = self.qvalues[(state, action)]
+                qvalue = self.getQValue(state, action)# self.qvalues[(state, action)]
                 if qvalue > bestAction[1]:
                     bestAction = action, qvalue
             return bestAction[0]
@@ -245,10 +245,10 @@ class ApproximateQAgent(PacmanQAgent):
             # featureKey is the name of the feature
             # featureValue is the value of that feature
             featureValue = features[featureKey]
-            featureWeight = self.weights[featureKey]
+            #removed: featureWeight = self.weights[featureKey]
             self.weights[featureKey] = self.weights[featureKey] + self.alpha * difference * featureValue
 
-        self.qvalues[(state, action)] = self.getQValue(state, action)
+        #self.qvalues[(state, action)] = self.getQValue(state, action)
 
     def final(self, state):
         "Called at the end of each game."
