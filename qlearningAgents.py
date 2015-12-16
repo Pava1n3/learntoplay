@@ -208,7 +208,15 @@ class ApproximateQAgent(PacmanQAgent):
           where * is the dotProduct operator
         """
         "*** YOUR CODE HERE ***"
-        return self.weights * self.featExtractor.getFeatures(state, action)
+        value = 0
+        
+        features = self.featExtractor.getFeatures(state, action)
+        for featureKey in features:
+            featureValue = features[featureKey]
+            featureWeight = self.weights[featureKey]
+            value += featureWeight * featureValue
+        #print "Q(", state, ",", action, ") =", value
+        return value
         #util.raiseNotDefined()
 
     def update(self, state, action, nextState, reward):
@@ -221,19 +229,26 @@ class ApproximateQAgent(PacmanQAgent):
         # get max Q
         nextMax = -99999
         for nextAction in nextLegalActions:
-            nextQvalue = self.qvalues[(nextState, nextAction)]
+            nextQvalue = self.getQValue(nextState, nextAction) #self.qvalues[(nextState, nextAction)]
             if nextQvalue > nextMax:
                 nextMax = nextQvalue
 
         if not nextLegalActions:
             nextMax = 0
 
-        difference = (reward + self.discount * nextMax) - self.qvalues[(state, action)]
+        difference = (reward + self.discount * nextMax) - self.getQValue(state, action) #self.qvalues[(state, action)]
+
         features = self.featExtractor.getFeatures(state, action)
-        for feature in features:
-            print feature
-            #self.weights[feature] = self.weights[feature] + self.alpha * difference * feature
-        util.raiseNotDefined()
+        # weights and features are both util.Counter() objects
+        # for every feature:
+        for featureKey in features:
+            # featureKey is the name of the feature
+            # featureValue is the value of that feature
+            featureValue = features[featureKey]
+            featureWeight = self.weights[featureKey]
+            self.weights[featureKey] = self.weights[featureKey] + self.alpha * difference * featureValue
+
+        self.qvalues[(state, action)] = self.getQValue(state, action)
 
     def final(self, state):
         "Called at the end of each game."
@@ -244,4 +259,5 @@ class ApproximateQAgent(PacmanQAgent):
         if self.episodesSoFar == self.numTraining:
             # you might want to print your weights here for debugging
             "*** YOUR CODE HERE ***"
+            print self.weights
             pass
