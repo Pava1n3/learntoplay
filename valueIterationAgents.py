@@ -100,7 +100,7 @@ class ValueIterationAgent(ValueEstimationAgent):
             nextStateReward = self.mdp.getReward(state, action, nextState) + self.values[nextState]
             reward += prob * nextStateReward
 
-        # return the reward, and if there are more than one actions,
+        # return the reward, and if there is more than one action,
         # multiply the reward with the discount.
         # (only a state that goes to the terminal state has one action, namely 'exit')
         if len(transitionStatesAndProbs) != 1:
